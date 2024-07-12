@@ -1,0 +1,9 @@
+{
+	"name": "adffian",
+	"location": "southeastasia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "06618987-2d7f-4d33-8a59-5a93fe1fb343",
+		"tenantId": "e522de87-3b5f-4914-b700-3ee0ac8e7497"
+	}
+}
