@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "CSV_ADLS_MovieADLS_Fian",
+						"referenceName": "CSV_ADLS_Ratings_Fian",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -80,12 +80,10 @@
 				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
-				"          movie as string,",
-				"          title as string,",
-				"          genres as string,",
-				"          year as string,",
-				"          Rating as string,",
-				"          {Rotton Tomato} as string",
+				"          EmployeeID as string,",
+				"          EnvironmentSatisfaction as string,",
+				"          JobSatisfaction as string,",
+				"          WorkLifeBalance as string",
 				"     ),",
 				"     partitionFileNames:['Ratings.csv'],",
 				"     umask: 0022,",
