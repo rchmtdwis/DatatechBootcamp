@@ -16,6 +16,9 @@
 			"transformations": [
 				{
 					"name": "select1"
+				},
+				{
+					"name": "filter1"
 				}
 			],
 			"scriptLines": [
@@ -36,10 +39,11 @@
 				"          genres,",
 				"          year,",
 				"          Rating,",
-				"          {Rotton Tomato}",
+				"          {Rotten Tomato} = {Rotton Tomato}",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 filter(rointeger(year) > 1950) ~> filter1"
 			]
 		}
 	}
