@@ -64,8 +64,13 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "JSON_ADLS_mhaniffajari",
-									"type": "DatasetReference"
+									"referenceName": "JSON_ADLS_fian",
+									"type": "DatasetReference",
+									"parameters": {
+										"container_name": "development",
+										"folder_name": "data",
+										"file_name": "@item()"
+									}
 								}
 							]
 						}
@@ -75,8 +80,11 @@
 		],
 		"variables": {
 			"file_name": {
-				"type": "String",
-				"defaultValue": "[\"documents.json\", \"example_json.json\"]"
+				"type": "Array",
+				"defaultValue": [
+					"documents.json",
+					"example_json.json"
+				]
 			}
 		},
 		"annotations": []
