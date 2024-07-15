@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adffian"
+		},
+		"ADLSFian_accountKey": {
+			"value": ""
+		},
+		"SQLFian_password": {
+			"value": ""
+		},
+		"ADLSFian_properties_typeProperties_url": {
+			"value": "https://storageaccountfian.dfs.core.windows.net/"
+		},
+		"HTTP_solliancepublicdata_Customer_properties_typeProperties_url": {
+			"value": "https://solliancepublicdata.blob.core.windows.net/dataengineering/dp-203/awdata/CustomerSource.csv"
+		},
+		"SQLFian_properties_typeProperties_server": {
+			"value": "fian.database.windows.net"
+		},
+		"SQLFian_properties_typeProperties_database": {
+			"value": "data"
+		},
+		"SQLFian_properties_typeProperties_userName": {
+			"value": "fian"
+		}
+	}
+}
