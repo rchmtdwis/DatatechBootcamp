@@ -2,7 +2,7 @@
 	"name": "Binary_ADLS_fian",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "HTTP_solliancepublicdata_Customer",
+			"referenceName": "ADLSFian",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
@@ -23,9 +23,17 @@
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
-				"type": "HttpServerLocation",
-				"relativeUrl": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
 					"value": "@dataset().filename",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().folder_name",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().container_name",
 					"type": "Expression"
 				}
 			}
