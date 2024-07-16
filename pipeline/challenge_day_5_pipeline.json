@@ -88,7 +88,7 @@
 										"bucket": "azure_data_engineer",
 										"folder_name": "image",
 										"file_name": {
-											"value": "@item()",
+											"value": "@concat(item(),'.png')",
 											"type": "Expression"
 										}
 									}
@@ -173,7 +173,7 @@
 									{
 										"type": "Query",
 										"text": {
-											"value": "@concat('INSERT INTO Challenge.ListImage (image_name, image_url) VALUES (''', concat(item(), '.png'), ''', ''failed', concat(item(), '.png'), ''');')\n",
+											"value": "@concat('INSERT INTO Challenge.ListImage (image_name, image_url) VALUES (''', concat(item(), '.png'), ''', ''failed', ''');')\n",
 											"type": "Expression"
 										}
 									}
