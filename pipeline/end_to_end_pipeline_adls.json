@@ -515,7 +515,7 @@
 						"referenceName": "MySQLHanif",
 						"type": "DatasetReference",
 						"parameters": {
-							"table_name": "customers"
+							"table_name": "order_items"
 						}
 					}
 				],
