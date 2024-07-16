@@ -3,10 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Customers",
+				"name": "CSV to SQL Server Application",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "PGSQL to CSV Application",
@@ -41,7 +39,7 @@
 						"upsertSettings": {
 							"useTempDB": true,
 							"keys": [
-								"customer_id"
+								"SK_ID_CURR"
 							]
 						},
 						"sqlWriterUseTableLock": false
@@ -74,17 +72,15 @@
 						"referenceName": "SQLFian",
 						"type": "DatasetReference",
 						"parameters": {
-							"schema": "ord",
-							"table_name": "customers"
+							"schema": "Challenge",
+							"table_name": "Application"
 						}
 					}
 				]
 			},
 			{
-				"name": "orders",
+				"name": "CSV to SQL Server PreviousApplication",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "PGSQL to CSV PreviousApplication",
@@ -119,7 +115,8 @@
 						"upsertSettings": {
 							"useTempDB": true,
 							"keys": [
-								"order_id"
+								"SK_ID_PREV",
+								"SK_ID_CURR"
 							]
 						},
 						"sqlWriterUseTableLock": false
@@ -140,8 +137,8 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"container_name": "development",
-							"folder_name": "@concat('data/orders/',formatDateTime(utcNow(), 'yyyy_MM_dd'))",
-							"file_name": "orders.csv",
+							"folder_name": "PGSQL",
+							"file_name": "previous_application.csv",
 							"delimite_name": ",",
 							"row_as_header": true
 						}
@@ -152,17 +149,15 @@
 						"referenceName": "SQLFian",
 						"type": "DatasetReference",
 						"parameters": {
-							"schema": "ord",
-							"table_name": "orders"
+							"schema": "Challenge",
+							"table_name": "PreviousApplication"
 						}
 					}
 				]
 			},
 			{
-				"name": "order_item",
+				"name": "CSV to SQL Server Bureau",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "PGSQL to CSV Bureau",
@@ -197,8 +192,8 @@
 						"upsertSettings": {
 							"useTempDB": true,
 							"keys": [
-								"order_id",
-								"order_item_id"
+								"SK_ID_CURR",
+								"SK_ID_BUREAU"
 							]
 						},
 						"sqlWriterUseTableLock": false
@@ -219,11 +214,8 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"container_name": "development",
-							"folder_name": {
-								"value": "@concat('data/order_items/',formatDateTime(utcNow(), 'yyyy_MM_dd'))",
-								"type": "Expression"
-							},
-							"file_name": "order_items.csv",
+							"folder_name": "PGSQL",
+							"file_name": "bureau.csv",
 							"delimite_name": ",",
 							"row_as_header": true
 						}
@@ -234,8 +226,8 @@
 						"referenceName": "SQLFian",
 						"type": "DatasetReference",
 						"parameters": {
-							"schema": "ord",
-							"table_name": "order_items"
+							"schema": "Challenge",
+							"table_name": "Bureau"
 						}
 					}
 				]
@@ -247,19 +239,25 @@
 				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
-						"activity": "Customers",
+						"activity": "CSV to SQL Server Application",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					},
 					{
-						"activity": "orders",
+						"activity": "CSV to SQL Server PreviousApplication",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					},
 					{
-						"activity": "order_item",
+						"activity": "CSV to SQL Server Bureau",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "CSV to SQL Server Installment",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -276,7 +274,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "select * from ord.view_customer_rfm",
+						"sqlReaderQuery": "select * from Challenge.ViewLoanFact",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -286,8 +284,7 @@
 						"upsertSettings": {
 							"useTempDB": true,
 							"keys": [
-								"customer_id",
-								"month_id"
+								"customer_no"
 							]
 						},
 						"sqlWriterUseTableLock": false
@@ -317,8 +314,8 @@
 						"referenceName": "SQLFian",
 						"type": "DatasetReference",
 						"parameters": {
-							"schema": "ord",
-							"table_name": "fact_customer_rfm"
+							"schema": "Challenge",
+							"table_name": "LoanModeling"
 						}
 					}
 				]
@@ -337,16 +334,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "PostgreSqlV2Source",
-						"additionalColumns": [
-							{
-								"name": "ingest_time",
-								"value": {
-									"value": "@utcNow()",
-									"type": "Expression"
-								}
-							}
-						]
+						"type": "PostgreSqlV2Source"
 					},
 					"sink": {
 						"type": "DelimitedTextSink",
@@ -407,16 +395,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "PostgreSqlV2Source",
-						"additionalColumns": [
-							{
-								"name": "ingest_time",
-								"value": {
-									"value": "@utcNow()",
-									"type": "Expression"
-								}
-							}
-						]
+						"type": "PostgreSqlV2Source"
 					},
 					"sink": {
 						"type": "DelimitedTextSink",
@@ -477,16 +456,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "PostgreSqlV2Source",
-						"additionalColumns": [
-							{
-								"name": "ingest_time",
-								"value": {
-									"value": "@utcNow()",
-									"type": "Expression"
-								}
-							}
-						]
+						"type": "PostgreSqlV2Source"
 					},
 					"sink": {
 						"type": "DelimitedTextSink",
@@ -595,11 +565,16 @@
 				]
 			},
 			{
-				"name": "Copy data2",
+				"name": "CSV to SQL Server Installment",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "PGSQL to CSV Installment",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -609,8 +584,62 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"enableStaging": false
-				}
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"SK_ID_PREV",
+								"SK_ID_CURR"
+							]
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "csv_adls_fian",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": "PGSQL",
+							"file_name": "installment.csv",
+							"delimite_name": ",",
+							"row_as_header": true
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQLFian",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "Challenge",
+							"table_name": "Installments"
+						}
+					}
+				]
 			}
 		],
 		"folder": {
