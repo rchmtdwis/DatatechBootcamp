@@ -5,6 +5,8 @@
 			{
 				"name": "CSV to SQL Server Application",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "PGSQL to CSV Application",
@@ -81,6 +83,8 @@
 			{
 				"name": "CSV to SQL Server PreviousApplication",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "PGSQL to CSV PreviousApplication",
@@ -158,6 +162,8 @@
 			{
 				"name": "CSV to SQL Server Bureau",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "PGSQL to CSV Bureau",
@@ -233,10 +239,8 @@
 				]
 			},
 			{
-				"name": "fact_customer_rfm",
+				"name": "fact_loan_modeling",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "CSV to SQL Server Application",
@@ -323,6 +327,8 @@
 			{
 				"name": "PGSQL to CSV Application",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -384,6 +390,8 @@
 			{
 				"name": "PGSQL to CSV PreviousApplication",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -445,6 +453,8 @@
 			{
 				"name": "PGSQL to CSV Bureau",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -506,6 +516,8 @@
 			{
 				"name": "PGSQL to CSV Installment",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -567,6 +579,8 @@
 			{
 				"name": "CSV to SQL Server Installment",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "PGSQL to CSV Installment",
