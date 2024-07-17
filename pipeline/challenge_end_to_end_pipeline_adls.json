@@ -241,6 +241,8 @@
 			{
 				"name": "fact_loan_modeling",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "CSV to SQL Server Application",
@@ -579,8 +581,6 @@
 			{
 				"name": "CSV to SQL Server Installment",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "PGSQL to CSV Installment",
