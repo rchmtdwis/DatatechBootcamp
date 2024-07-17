@@ -581,6 +581,8 @@
 			{
 				"name": "CSV to SQL Server Installment",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "PGSQL to CSV Installment",
