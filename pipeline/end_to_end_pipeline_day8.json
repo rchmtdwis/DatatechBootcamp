@@ -30,15 +30,15 @@
 						]
 					},
 					"sink": {
-						"type": "SqlServerSink",
-						"writeBehavior": "upsert",
-						"upsertSettings": {
-							"useTempDB": true,
-							"keys": [
-								"customer_id"
-							]
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
 						},
-						"sqlWriterUseTableLock": false
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
 					},
 					"enableStaging": false,
 					"translator": {
@@ -61,11 +61,17 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "SQLFian",
+						"referenceName": "csv_adls_fian",
 						"type": "DatasetReference",
 						"parameters": {
-							"schema": "ord",
-							"table_name": "customers"
+							"container_name": "development",
+							"folder_name": {
+								"value": "@concat('raw/customers/', formatDateTime(utcnow(), 'yyyyMMdd'))",
+								"type": "Expression"
+							},
+							"file_name": "customers.csv",
+							"delimite_name": ",",
+							"row_as_header": true
 						}
 					}
 				]
@@ -98,15 +104,15 @@
 						]
 					},
 					"sink": {
-						"type": "SqlServerSink",
-						"writeBehavior": "upsert",
-						"upsertSettings": {
-							"useTempDB": true,
-							"keys": [
-								"order_id"
-							]
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
 						},
-						"sqlWriterUseTableLock": false
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
 					},
 					"enableStaging": false,
 					"translator": {
@@ -129,11 +135,17 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "SQLFian",
+						"referenceName": "csv_adls_fian",
 						"type": "DatasetReference",
 						"parameters": {
-							"schema": "ord",
-							"table_name": "orders"
+							"container_name": "development",
+							"folder_name": {
+								"value": "@concat('raw/orders/', formatDateTime(utcnow(), 'yyyyMMdd'))",
+								"type": "Expression"
+							},
+							"file_name": "orders.csv",
+							"delimite_name": ",",
+							"row_as_header": true
 						}
 					}
 				]
@@ -166,16 +178,15 @@
 						]
 					},
 					"sink": {
-						"type": "SqlServerSink",
-						"writeBehavior": "upsert",
-						"upsertSettings": {
-							"useTempDB": true,
-							"keys": [
-								"order_id",
-								"order_item_id"
-							]
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
 						},
-						"sqlWriterUseTableLock": false
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
 					},
 					"enableStaging": false,
 					"translator": {
@@ -198,18 +209,24 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "SQLFian",
+						"referenceName": "csv_adls_fian",
 						"type": "DatasetReference",
 						"parameters": {
-							"schema": "ord",
-							"table_name": "order_items"
+							"container_name": "development",
+							"folder_name": {
+								"value": "@concat('raw/order_items/', formatDateTime(utcnow(), 'yyyyMMdd'))",
+								"type": "Expression"
+							},
+							"file_name": "order_items.csv",
+							"delimite_name": ",",
+							"row_as_header": true
 						}
 					}
 				]
 			},
 			{
-				"name": "fact_customer_rfm",
-				"type": "Copy",
+				"name": "Transform and Load",
+				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
 						"activity": "Customers",
@@ -239,54 +256,12 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "SqlServerSource",
-						"sqlReaderQuery": "select * from ord.view_customer_rfm",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"sink": {
-						"type": "SqlServerSink",
-						"writeBehavior": "upsert",
-						"upsertSettings": {
-							"useTempDB": true,
-							"keys": [
-								"customer_id",
-								"month_id"
-							]
-						},
-						"sqlWriterUseTableLock": false
-					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
+					"notebookPath": "/Users/kelompok1@xundarimalamsuro.onmicrosoft.com/Fian/Practice Case _ Integrating with ADF/customer_rfm"
 				},
-				"inputs": [
-					{
-						"referenceName": "SQLFian",
-						"type": "DatasetReference",
-						"parameters": {
-							"schema": "-",
-							"table_name": "-"
-						}
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "SQLFian",
-						"type": "DatasetReference",
-						"parameters": {
-							"schema": "ord",
-							"table_name": "fact_customer_rfm"
-						}
-					}
-				]
+				"linkedServiceName": {
+					"referenceName": "DB_Kelompok_4",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"annotations": []
