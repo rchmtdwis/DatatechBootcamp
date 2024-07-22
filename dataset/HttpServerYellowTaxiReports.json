@@ -1,0 +1,31 @@
+{
+	"name": "HttpServerYellowTaxiReports",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "HttpServerYellowTaxiReports",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"relative_path": {
+				"type": "string",
+				"defaultValue": "trip-data"
+			},
+			"file_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "@concat(dataset().relative_path,'/',dataset().file_name)",
+					"type": "Expression"
+				}
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
