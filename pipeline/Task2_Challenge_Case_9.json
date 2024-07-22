@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "Copy data Yellow Trip Jan to ADLS",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -16,37 +16,26 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "ParquetSource",
+						"type": "BinarySource",
 						"storeSettings": {
 							"type": "HttpReadSettings",
 							"requestMethod": "GET"
 						},
 						"formatSettings": {
-							"type": "ParquetReadSettings"
+							"type": "BinaryReadSettings"
 						}
 					},
 					"sink": {
-						"type": "ParquetSink",
+						"type": "BinarySink",
 						"storeSettings": {
 							"type": "AzureBlobFSWriteSettings"
-						},
-						"formatSettings": {
-							"type": "ParquetWriteSettings"
 						}
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
+					"enableStaging": false
 				},
 				"inputs": [
 					{
-						"referenceName": "HttpServerYellowTaxiReports",
+						"referenceName": "BinaryTrip_Records",
 						"type": "DatasetReference",
 						"parameters": {
 							"relative_path": "trip-data",
@@ -56,15 +45,273 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Parquet_ADLS_Fian",
+						"referenceName": "Binary_ADLS_fian",
 						"type": "DatasetReference",
 						"parameters": {
 							"container_name": "development",
 							"folder_name": "trip_records",
-							"file_name": "yellow_tripdata_2024-01.parquet"
+							"filename": "yellow_tripdata_2024-01.snappy.parquet"
 						}
 					}
 				]
+			},
+			{
+				"name": "Copy data Yellow Trip Feb to ADLS",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "BinaryTrip_Records",
+						"type": "DatasetReference",
+						"parameters": {
+							"relative_path": "trip-data",
+							"file_name": "yellow_tripdata_2024-02.parquet"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Binary_ADLS_fian",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": "trip_records",
+							"filename": "yellow_tripdata_2024-02.snappy.parquet"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy data Yellow Trip March to ADLS",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "BinaryTrip_Records",
+						"type": "DatasetReference",
+						"parameters": {
+							"relative_path": "trip-data",
+							"file_name": "yellow_tripdata_2024-03.parquet"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Binary_ADLS_fian",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": "trip_records",
+							"filename": "yellow_tripdata_2024-03.snappy.parquet"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy data Yellow Trip Apr to ADLS",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "BinaryTrip_Records",
+						"type": "DatasetReference",
+						"parameters": {
+							"relative_path": "trip-data",
+							"file_name": "yellow_tripdata_2024-04.parquet"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Binary_ADLS_fian",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": "trip_records",
+							"filename": "yellow_tripdata_2024-04.snappy.parquet"
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy data Yellow Trip May to ADLS",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "BinaryTrip_Records",
+						"type": "DatasetReference",
+						"parameters": {
+							"relative_path": "trip-data",
+							"file_name": "yellow_tripdata_2024-05.parquet"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Binary_ADLS_fian",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": "trip_records",
+							"filename": "yellow_tripdata_2024-05.snappy.parquet"
+						}
+					}
+				]
+			},
+			{
+				"name": "Notebook1",
+				"type": "DatabricksNotebook",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Copy data Yellow Trip Feb to ADLS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Copy data Yellow Trip March to ADLS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Copy data Yellow Trip Apr to ADLS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Copy data Yellow Trip May to ADLS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Copy data Yellow Trip Jan to ADLS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
 			}
 		],
 		"folder": {
