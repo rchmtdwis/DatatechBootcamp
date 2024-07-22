@@ -1,0 +1,12 @@
+{
+	"name": "HttpServerYellowTaxiReports",
+	"properties": {
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "https://d37ci6vzurychx.cloudfront.net/",
+			"enableServerCertificateValidation": false,
+			"authenticationType": "Anonymous"
+		}
+	}
+}
