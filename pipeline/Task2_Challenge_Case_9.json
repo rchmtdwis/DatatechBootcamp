@@ -311,7 +311,14 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users"
+				},
+				"linkedServiceName": {
+					"referenceName": "DB_Kelompok_4",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"folder": {
