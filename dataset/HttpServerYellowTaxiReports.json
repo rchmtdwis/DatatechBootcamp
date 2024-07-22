@@ -20,7 +20,7 @@
 			"location": {
 				"type": "HttpServerLocation",
 				"relativeUrl": {
-					"value": "@concat(dataset().relative_path,'/',dataset().file_name)",
+					"value": "@concat(dataset().relative_path,'/', dataset().file_name)",
 					"type": "Expression"
 				}
 			},

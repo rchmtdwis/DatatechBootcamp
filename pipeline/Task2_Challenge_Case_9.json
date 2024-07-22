@@ -16,21 +16,53 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "BinarySource",
+						"type": "ParquetSource",
 						"storeSettings": {
 							"type": "HttpReadSettings",
 							"requestMethod": "GET"
 						},
 						"formatSettings": {
-							"type": "BinaryReadSettings"
+							"type": "ParquetReadSettings"
 						}
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
 				"inputs": [
 					{
-						"referenceName": "Binary_HTTP_solliancepublicdata_Customer",
-						"type": "DatasetReference"
+						"referenceName": "HttpServerYellowTaxiReports",
+						"type": "DatasetReference",
+						"parameters": {
+							"relative_path": "trip-data",
+							"file_name": "yellow_tripdata_2024-01.parquet"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Parquet_ADLS_Fian",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": "trip_records",
+							"file_name": "yellow_tripdata_2024-01.parquet"
+						}
 					}
 				]
 			}
