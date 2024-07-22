@@ -1,0 +1,27 @@
+{
+	"name": "MongoDbV2Collection1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "MongoDbData",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"collection_name": {
+				"type": "string",
+				"defaultValue": "documents"
+			}
+		},
+		"folder": {
+			"name": "Database"
+		},
+		"annotations": [],
+		"type": "MongoDbV2Collection",
+		"schema": [],
+		"typeProperties": {
+			"collection": {
+				"value": "@dataset().collection_name",
+				"type": "Expression"
+			}
+		}
+	}
+}
