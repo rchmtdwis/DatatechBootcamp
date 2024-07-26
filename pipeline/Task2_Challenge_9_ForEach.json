@@ -83,7 +83,7 @@
 							"key": "filename",
 							"value": {
 								"type": "Expression",
-								"content": "@split(replace(activity('Lookup1').output.firstRow.concatenated_files, '\\', ''), ',')"
+								"content": "@split(activity('Lookup1').output.firstRow.Prop_0,',')"
 							}
 						}
 					],
