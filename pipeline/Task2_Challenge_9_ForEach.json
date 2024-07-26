@@ -15,7 +15,13 @@
 						]
 					}
 				],
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('filename')",
+						"type": "Expression"
+					}
+				}
 			},
 			{
 				"name": "Lookup1",
@@ -48,8 +54,8 @@
 							"container_name": "development",
 							"folder_name": "calendar",
 							"file_name": "calendar.csv",
-							"delimite_name": ",",
-							"row_as_header": true
+							"delimite_name": ".",
+							"row_as_header": false
 						}
 					}
 				}
@@ -69,11 +75,12 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"variableName": "pipelineReturnValue",
 					"value": [
 						{
-							"key": "file_name",
+							"key": "filename",
 							"value": {
 								"type": "Expression",
 								"content": "@split(replace(activity('Lookup1').output.firstRow.concatenated_files, '\\', ''), ',')"
