@@ -1,0 +1,9 @@
+{
+	"name": "adf-bootcamp",
+	"location": "southeastasia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "f0e128c4-a885-4fae-b164-c07481c262b4",
+		"tenantId": "6afac7c3-1518-4848-b73f-85ad2a4b794f"
+	}
+}
