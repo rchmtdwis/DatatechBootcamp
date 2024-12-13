@@ -1,0 +1,269 @@
+{
+	"name": "end_to_end_pipeline_day8",
+	"properties": {
+		"activities": [
+			{
+				"name": "Customers",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "MySqlSource",
+						"additionalColumns": [
+							{
+								"name": "ingest_time",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						]
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "MySQLHanif",
+						"type": "DatasetReference",
+						"parameters": {
+							"table_name": "customers"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "csv_adls_fian",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": {
+								"value": "@concat('raw/customers/', formatDateTime(utcnow(), 'yyyyMMdd'))",
+								"type": "Expression"
+							},
+							"file_name": "customers.csv",
+							"delimite_name": ",",
+							"row_as_header": true
+						}
+					}
+				]
+			},
+			{
+				"name": "orders",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "MySqlSource",
+						"additionalColumns": [
+							{
+								"name": "ingest_time",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						]
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "MySQLHanif",
+						"type": "DatasetReference",
+						"parameters": {
+							"table_name": "orders"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "csv_adls_fian",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": {
+								"value": "@concat('raw/orders/', formatDateTime(utcnow(), 'yyyyMMdd'))",
+								"type": "Expression"
+							},
+							"file_name": "orders.csv",
+							"delimite_name": ",",
+							"row_as_header": true
+						}
+					}
+				]
+			},
+			{
+				"name": "order_item",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "MySqlSource",
+						"additionalColumns": [
+							{
+								"name": "ingest_time",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						]
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "MySQLHanif",
+						"type": "DatasetReference",
+						"parameters": {
+							"table_name": "order_items"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "csv_adls_fian",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": {
+								"value": "@concat('raw/order_items/', formatDateTime(utcnow(), 'yyyyMMdd'))",
+								"type": "Expression"
+							},
+							"file_name": "order_items.csv",
+							"delimite_name": ",",
+							"row_as_header": true
+						}
+					}
+				]
+			},
+			{
+				"name": "Transform and Load",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Customers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "orders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "order_item",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/kelompok1@xundarimalamsuro.onmicrosoft.com/Fian/Practice Case _ Integrating with ADF/customer_rfm"
+				},
+				"linkedServiceName": {
+					"referenceName": "DB_Kelompok_4",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": []
+	}
+}

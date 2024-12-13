@@ -1,0 +1,666 @@
+{
+	"name": "challenge_end_to_end_pipeline_adls",
+	"properties": {
+		"activities": [
+			{
+				"name": "CSV to SQL Server Application",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "PGSQL to CSV Application",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"SK_ID_CURR"
+							]
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "csv_adls_fian",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": "PGSQL",
+							"file_name": "application.csv",
+							"delimite_name": ",",
+							"row_as_header": true
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQLFian",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "Challenge",
+							"table_name": "Application"
+						}
+					}
+				]
+			},
+			{
+				"name": "CSV to SQL Server PreviousApplication",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "PGSQL to CSV PreviousApplication",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"SK_ID_PREV",
+								"SK_ID_CURR"
+							]
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "csv_adls_fian",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": "PGSQL",
+							"file_name": "previous_application.csv",
+							"delimite_name": ",",
+							"row_as_header": true
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQLFian",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "Challenge",
+							"table_name": "PreviousApplication"
+						}
+					}
+				]
+			},
+			{
+				"name": "CSV to SQL Server Bureau",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "PGSQL to CSV Bureau",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"SK_ID_CURR",
+								"SK_ID_BUREAU"
+							]
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "csv_adls_fian",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": "PGSQL",
+							"file_name": "bureau.csv",
+							"delimite_name": ",",
+							"row_as_header": true
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQLFian",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "Challenge",
+							"table_name": "Bureau"
+						}
+					}
+				]
+			},
+			{
+				"name": "fact_loan_modeling",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "CSV to SQL Server Application",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "CSV to SQL Server PreviousApplication",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "CSV to SQL Server Bureau",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "CSV to SQL Server Installment",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "select * from Challenge.ViewLoanFact",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"customer_no"
+							]
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SQLFian",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "-",
+							"table_name": "-"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQLFian",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "Challenge",
+							"table_name": "LoanModeling"
+						}
+					}
+				]
+			},
+			{
+				"name": "PGSQL to CSV Application",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "PostgreSqlV2Source"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "PostgreSqlHanif",
+						"type": "DatasetReference",
+						"parameters": {
+							"table_name": "application",
+							"schema_name": "public"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "csv_adls_fian",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": "PGSQL",
+							"file_name": "application.csv",
+							"delimite_name": ",",
+							"row_as_header": true
+						}
+					}
+				]
+			},
+			{
+				"name": "PGSQL to CSV PreviousApplication",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "PostgreSqlV2Source"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "PostgreSqlHanif",
+						"type": "DatasetReference",
+						"parameters": {
+							"table_name": "previous_application",
+							"schema_name": "public"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "csv_adls_fian",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": "PGSQL",
+							"file_name": "previous_application.csv",
+							"delimite_name": ",",
+							"row_as_header": true
+						}
+					}
+				]
+			},
+			{
+				"name": "PGSQL to CSV Bureau",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "PostgreSqlV2Source"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "PostgreSqlHanif",
+						"type": "DatasetReference",
+						"parameters": {
+							"table_name": "bureau",
+							"schema_name": "public"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "csv_adls_fian",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": "PGSQL",
+							"file_name": "bureau.csv",
+							"delimite_name": ",",
+							"row_as_header": true
+						}
+					}
+				]
+			},
+			{
+				"name": "PGSQL to CSV Installment",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "PostgreSqlV2Source"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "PostgreSqlHanif",
+						"type": "DatasetReference",
+						"parameters": {
+							"table_name": "installment",
+							"schema_name": "public"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "csv_adls_fian",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": "PGSQL",
+							"file_name": "installment.csv",
+							"delimite_name": ",",
+							"row_as_header": true
+						}
+					}
+				]
+			},
+			{
+				"name": "CSV to SQL Server Installment",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "PGSQL to CSV Installment",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"SK_ID_PREV",
+								"SK_ID_CURR"
+							]
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "csv_adls_fian",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": "PGSQL",
+							"file_name": "installment.csv",
+							"delimite_name": ",",
+							"row_as_header": true
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQLFian",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "Challenge",
+							"table_name": "Installments"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Challenges"
+		},
+		"annotations": []
+	}
+}

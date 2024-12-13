@@ -1,12 +1,10 @@
 {
-	"name": "practice",
+	"name": "practice_case_SP",
 	"properties": {
 		"activities": [
 			{
 				"name": "HTTP to ADLS",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -56,8 +54,6 @@
 			{
 				"name": "Insert CSV to SQL",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "HTTP to ADLS",
@@ -239,9 +235,8 @@
 				]
 			},
 			{
-				"name": "SCD Type 1",
-				"description": "",
-				"type": "Copy",
+				"name": "SCD_Type_1_Customer",
+				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
 						"activity": "Insert CSV to SQL",
@@ -259,212 +254,12 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "SqlServerSource",
-						"additionalColumns": [
-							{
-								"name": "InsertedDate",
-								"value": {
-									"value": "@utcNow()",
-									"type": "Expression"
-								}
-							},
-							{
-								"name": "ModifiedDate",
-								"value": {
-									"value": "@utcNow()",
-									"type": "Expression"
-								}
-							}
-						],
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"sink": {
-						"type": "SqlServerSink",
-						"writeBehavior": "upsert",
-						"upsertSettings": {
-							"useTempDB": true,
-							"keys": [
-								"CustomerID"
-							]
-						},
-						"sqlWriterUseTableLock": false
-					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"name": "CustomerID",
-									"type": "Int32",
-									"physicalType": "int"
-								},
-								"sink": {
-									"name": "CustomerID",
-									"type": "Int32",
-									"physicalType": "int"
-								}
-							},
-							{
-								"source": {
-									"name": "Title",
-									"type": "String",
-									"physicalType": "nvarchar"
-								},
-								"sink": {
-									"name": "Title",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"name": "FirstName",
-									"type": "String",
-									"physicalType": "nvarchar"
-								},
-								"sink": {
-									"name": "FirstName",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"name": "MiddleName",
-									"type": "String",
-									"physicalType": "nvarchar"
-								},
-								"sink": {
-									"name": "MiddleName",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"name": "LastName",
-									"type": "String",
-									"physicalType": "nvarchar"
-								},
-								"sink": {
-									"name": "LastName",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"name": "Suffix",
-									"type": "String",
-									"physicalType": "nvarchar"
-								},
-								"sink": {
-									"name": "Suffix",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"name": "CompanyName",
-									"type": "String",
-									"physicalType": "nvarchar"
-								},
-								"sink": {
-									"name": "CompanyName",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"name": "SalesPerson",
-									"type": "String",
-									"physicalType": "nvarchar"
-								},
-								"sink": {
-									"name": "SalesPerson",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"name": "EmailAddress",
-									"type": "String",
-									"physicalType": "nvarchar"
-								},
-								"sink": {
-									"name": "EmailAddress",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"name": "Phone",
-									"type": "String",
-									"physicalType": "nvarchar"
-								},
-								"sink": {
-									"name": "Phone",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"name": "InsertedDate",
-									"type": "String"
-								},
-								"sink": {
-									"name": "InsertedDate",
-									"type": "DateTime",
-									"physicalType": "datetime"
-								}
-							},
-							{
-								"source": {
-									"name": "ModifiedDate",
-									"type": "String"
-								},
-								"sink": {
-									"name": "ModifiedDate",
-									"type": "DateTime",
-									"physicalType": "datetime"
-								}
-							}
-						],
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
+					"storedProcedureName": "[dbo].[SCD_Type_1_Customer]"
 				},
-				"inputs": [
-					{
-						"referenceName": "SQLFian",
-						"type": "DatasetReference",
-						"parameters": {
-							"schema": "dbo",
-							"table_name": "CustomerSource"
-						}
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "SQLFian",
-						"type": "DatasetReference",
-						"parameters": {
-							"schema": "dbo",
-							"table_name": "DimCustomer"
-						}
-					}
-				]
+				"linkedServiceName": {
+					"referenceName": "SQLFian",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"annotations": []

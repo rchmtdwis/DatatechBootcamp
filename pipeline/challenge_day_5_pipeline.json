@@ -1,0 +1,203 @@
+{
+	"name": "challenge_day_5_pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "lookup_list_image",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT \n    STRING_AGG(image_name,',') AS concatenated_files\nFROM list_image;",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SqlServerHanif",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "-",
+							"table_name": "-"
+						}
+					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "lookup_list_image",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@split(replace(activity('lookup_list_image').output.firstRow.concatenated_files, '\\', ''), ',')",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Transfer ADLS",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "GoogleCloudStorageReadSettings",
+										"recursive": true
+									},
+									"formatSettings": {
+										"type": "BinaryReadSettings"
+									}
+								},
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "Binary_GCS_image",
+									"type": "DatasetReference",
+									"parameters": {
+										"bucket": "azure_data_engineer",
+										"folder_name": "image",
+										"file_name": {
+											"value": "@concat(item(),'.png')",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Binary_ADLS_fian",
+									"type": "DatasetReference",
+									"parameters": {
+										"container_name": "development",
+										"folder_name": "GCS",
+										"filename": {
+											"value": "@concat(item(),'.png')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "success",
+							"type": "Script",
+							"dependsOn": [
+								{
+									"activity": "Transfer ADLS",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "SQLFian",
+								"type": "LinkedServiceReference"
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "Query",
+										"text": {
+											"value": "@concat('INSERT INTO Challenge.ListImage (image_name, image_url) VALUES (''', concat(item(), '.png'), ''', ''https://storageaccountfian.blob.core.windows.net/development/GCS/', concat(item(), '.png'), ''');')\n",
+											"type": "Expression"
+										}
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
+							}
+						},
+						{
+							"name": "Failed",
+							"type": "Script",
+							"dependsOn": [
+								{
+									"activity": "Transfer ADLS",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "SQLFian",
+								"type": "LinkedServiceReference"
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "Query",
+										"text": {
+											"value": "@concat('INSERT INTO Challenge.ListImage (image_name, image_url) VALUES (''', concat(item(), '.png'), ''', ''failed', ''');')\n",
+											"type": "Expression"
+										}
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"file_name": {
+				"type": "Array",
+				"defaultValue": [
+					"google.png",
+					"azure.png",
+					"aws.png"
+				]
+			}
+		},
+		"folder": {
+			"name": "Challenges"
+		},
+		"annotations": []
+	}
+}
